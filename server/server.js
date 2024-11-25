@@ -14,7 +14,6 @@ configViewEngine(app)
 app.use(express.json()) //for json
 app.use(express.urlencoded({ extended: true })) //for form data
 //khai báo router
-// app.use('/api', webRouters);
 app.use("/api/user", webRouters)
 
 
