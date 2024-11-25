@@ -1,0 +1,15 @@
+.auth {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(45deg, #bcbcbc 50%, #258087 100%);
+}
+
+.login__form {
+    width: 80%;
+    height: 80%;
+    min-width: 300px;
+    background-color: #ffffff;
+    border-radius: 16px;
+}
