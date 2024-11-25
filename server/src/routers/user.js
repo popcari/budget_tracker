@@ -6,7 +6,7 @@ const {
 	createUserAPI,
 	updateUserAPI,
 	deleteUserAPI
-} = require("../controllers/homeController")
+} = require("../controllers/userController")
 const router = express.Router()
 router.get("/", getAllUsersAPI)
 router.get("/:id", getUserByIdAPI)

@@ -1,7 +1,7 @@
 require("dotenv").config()
 const express = require("express") //commonjs
 const configViewEngine = require("./src/config/viewEngine") //commonjs
-const webRouters = require("./src/routers/web")
+const userRouters = require("./src/routers/user")
 const connection = require("./src/config/database")
 
 const app = express()
@@ -14,7 +14,7 @@ configViewEngine(app)
 app.use(express.json()) //for json
 app.use(express.urlencoded({ extended: true })) //for form data
 //khai báo router
-app.use("/api/user", webRouters)
+app.use("/api/user", userRouters)
 
 
 

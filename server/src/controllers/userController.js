@@ -4,7 +4,7 @@ const {
 	createUser,
 	updateUser,
 	deleteUser
-} = require("../services/CRUDService")
+} = require("../services/userService")
 
 // GET /api/users
 const getAllUsersAPI = async (req, res) => {
