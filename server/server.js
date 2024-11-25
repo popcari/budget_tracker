@@ -15,9 +15,9 @@ app.use(express.json()) //for json
 app.use(express.urlencoded({ extended: true })) //for form data
 //khai báo router
 // app.use('/api', webRouters);
-app.use("/", webRouters)
+app.use("/api/user", webRouters)
 
-//test connection
+
 
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`)
