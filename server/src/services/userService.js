@@ -92,11 +92,38 @@ const loginUser = (email, password) => {
 		);
 	});
 };
+const registerUser = (email, name, city, password) => {
+	return new Promise((resolve, reject) => {
+		// Check if the email already exists
+		connection.query(`SELECT * FROM Users WHERE email = ?`, [email], (err, results) => {
+			if (err) {
+				return reject(err);
+			}
+			if (results.length > 0) {
+				return reject(new Error("Email already exists"));
+			}
+
+			// If the email does not exist, add a new user to the database
+			connection.query(
+				`INSERT INTO Users (email, name, city, password) VALUES (?, ?, ?, ?)`,
+				[email, name, city, password],
+				(err, result) => {
+					if (err) {
+						return reject(err);
+					}
+					resolve(result);
+				}
+			);
+		});
+	});
+};
+
 module.exports = {
 	getAllUsers,
 	getUserById,
 	createUser,
 	updateUser,
 	deleteUser,
-	loginUser
+	loginUser,
+	registerUser
 }
