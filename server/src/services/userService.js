@@ -29,11 +29,11 @@ const getUserById = (userId) => {
 	})
 }
 
-const createUser = (email, name, city) => {
+const createUser = (email, name, city, password) => {
 	return new Promise((resolve, reject) => {
 		connection.query(
-			`INSERT INTO Users (email, name, city) VALUES (?, ?, ?)`,
-			[email, name, city],
+			`INSERT INTO Users (email, name, city,password) VALUES (?, ?, ?,?)`,
+			[email, name, city, password],
 			(err, result) => {
 				if (err) {
 					return reject(err)
@@ -44,11 +44,11 @@ const createUser = (email, name, city) => {
 	})
 }
 
-const updateUser = (userId, email, name, city) => {
+const updateUser = (userId, email, name, city, password) => {
 	return new Promise((resolve, reject) => {
 		connection.query(
-			`UPDATE Users SET email = ?, name = ?, city = ? WHERE id = ?`,
-			[email, name, city, userId],
+			`UPDATE Users SET email = ?, name = ?, city = ?,password=? WHERE id = ?`,
+			[email, name, city, password, userId],
 			(err, result) => {
 				if (err) {
 					return reject(err)
@@ -75,10 +75,28 @@ const deleteUser = (userId) => {
 		)
 	})
 }
+const loginUser = (email, password) => {
+	return new Promise((resolve, reject) => {
+		connection.query(
+			`SELECT * FROM Users WHERE email = ? AND password = ?`,
+			[email, password],
+			(err, results) => {
+				if (err) {
+					return reject(err);
+				}
+				if (results.length === 0) {
+					return reject(new Error("Invalid email or password"));
+				}
+				resolve(results[0]);
+			}
+		);
+	});
+};
 module.exports = {
 	getAllUsers,
 	getUserById,
 	createUser,
 	updateUser,
-	deleteUser
+	deleteUser,
+	loginUser
 }

@@ -3,8 +3,37 @@ const {
 	getUserById,
 	createUser,
 	updateUser,
-	deleteUser
+	deleteUser, loginUser
 } = require("../services/userService")
+
+// POST /api/users/login
+const loginUserAPI = async (req, res) => {
+	const { email, password } = req.body;
+
+	if (!email || !password) {
+		return res.status(400).json({
+			success: false,
+			message: "Email and password are required",
+		});
+	}
+
+	try {
+		const user = await loginUser(email, password);
+
+
+		return res.status(200).json({
+			success: true,
+			message: "Login successful",
+			data: user,
+		});
+	} catch (err) {
+		console.error("Error logging in: ", err);
+		return res.status(401).json({
+			success: false,
+			message: "Invalid email or password",
+		});
+	}
+};
 
 // GET /api/users
 const getAllUsersAPI = async (req, res) => {
@@ -39,10 +68,10 @@ const getUserByIdAPI = async (req, res) => {
 
 // POST /api/users
 const createUserAPI = async (req, res) => {
-	const { email, name, city } = req.body
+	const { email, name, city, password } = req.body
 
 	try {
-		const result = await createUser(email, name, city)
+		const result = await createUser(email, name, city, password)
 		return res
 			.status(201)
 			.json({
@@ -61,10 +90,10 @@ const createUserAPI = async (req, res) => {
 // PUT /api/users/:id
 const updateUserAPI = async (req, res) => {
 	const userId = req.params.id
-	const { email, name, city } = req.body
+	const { email, name, city, password } = req.body
 
 	try {
-		await updateUser(userId, email, name, city)
+		await updateUser(userId, email, name, city, password)
 		return res
 			.status(200)
 			.json({ success: true, message: "User updated successfully" })
@@ -101,5 +130,6 @@ module.exports = {
 	getUserByIdAPI,
 	createUserAPI,
 	updateUserAPI,
-	deleteUserAPI
+	deleteUserAPI,
+	loginUserAPI
 }
