@@ -1,0 +1,71 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: rgb(28,9,95) !important; /* Màu nền ngoài giống Discord */
+  color: rgb(181,186,193) !important; /* Màu chữ giống Discord */
+  font-family: 'Whitney', Arial, sans-serif !important; /* Font giống Discord */
+}
+
+#root {
+  height: 100%;
+}
+
+.login-container {
+  min-height: 100vh; /* Phủ toàn màn hình */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: rgb(34,82,218); /* Màu nền form giống Discord */
+  border-radius: 10px;
+}
+
+.login-container h2 {
+  color: rgb(181,186,193); /* Màu chữ giống Discord */
+  margin-bottom: 30px;
+  font-size: 32px;
+  font-weight: bold;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3); /* Thêm bóng nhẹ */
+}
+
+.error-message {
+  background: rgba(255, 0, 0, 0.2); /* Màu lỗi */
+  padding: 10px;
+  border-radius: 5px;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.gradient-button {
+  background: linear-gradient(135deg, #3a1c71, #7289da, #99aab5); /* Tương tự màu Discord */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 12px 24px;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Hiệu ứng bóng */
+}
+
+.gradient-button:hover {
+  background: linear-gradient(135deg, #7289da, #5865f2, #3a1c71); /* Đảo ngược gradient khi hover */
+  transform: scale(1.05); /* Hiệu ứng phóng to khi hover */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* Bóng đổ đậm khi hover */
+}
+
+/* Input Style */
+.ant-input, .ant-input-password {
+  background: white; /* Màu nền input giống Discord */
+  color: black; /* Màu chữ trong input giống Discord */
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+}  

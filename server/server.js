@@ -3,10 +3,11 @@ const express = require("express") //commonjs
 const configViewEngine = require("./src/config/viewEngine") //commonjs
 const userRouters = require("./src/routers/user")
 const connection = require("./src/config/database")
-
+const cors = require("cors");
 const app = express()
 const port = process.env.PORT || 8888
-
+// Cấu hình CORS
+app.use(cors());
 //config template engine
 configViewEngine(app)
 
