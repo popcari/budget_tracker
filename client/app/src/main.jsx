@@ -12,6 +12,9 @@ import App from "./App.jsx"
 import Dashboard from "./views/Dashboard.jsx"
 import Login from "./views/Login.jsx"
 import Register from "./views/Register.jsx"
+import ListUser from "./views/ListUser.jsx"
+
+
 createRoot(document.getElementById("root")).render(
 	<StrictMode>
 		<Provider store={store}>
@@ -28,6 +31,7 @@ createRoot(document.getElementById("root")).render(
 					</Route>
 					<Route path="/Login" element={<Login />}></Route>
 					<Route path="/Register" element={<Register />}></Route>
+					<Route path="/ListUser" element={<ListUser />}></Route>
 				</Routes>
 			</Router>
 		</Provider>
