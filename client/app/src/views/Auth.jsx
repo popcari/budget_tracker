@@ -6,7 +6,7 @@ import React from "react"
 import "../style/auth.css"
 
 const Auth = () => {
-	
+
 
 	return (
 		<div className={`auth`}>
@@ -14,5 +14,5 @@ const Auth = () => {
 		</div>
 	)
 }
-
+//Trong mục view này là các file code để dựng lên các màn
 export default Auth
