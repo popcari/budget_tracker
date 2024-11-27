@@ -3,7 +3,7 @@ const {
 	getUserById,
 	createUser,
 	updateUser,
-	deleteUser, loginUser
+	deleteUser, loginUser, registerUser
 } = require("../services/userService")
 
 // POST /api/users/login
@@ -123,7 +123,51 @@ const deleteUserAPI = async (req, res) => {
 			.status(500)
 			.json({ success: false, message: "Something went wrong" })
 	}
-}
+};
+// POST /api/users/register
+const registerUserAPI = async (req, res) => {
+	const { email, name, city, password } = req.body;
+
+
+	if (!email || !name || !city || !password) {
+		return res.status(400).json({
+			success: false,
+			message: "All fields (email, name, city, password) are required",
+		});
+	}
+
+	try {
+		const result = await registerUser(email, name, city, password);
+
+
+		return res.status(201).json({
+			success: true,
+			message: "User registered successfully",
+			data: {
+				id: result.insertId,
+				email,
+				name,
+				city,
+			},
+		});
+	} catch (err) {
+		console.error("Error registering user: ", err);
+
+
+		if (err.message === "Email already exists") {
+			return res.status(409).json({
+				success: false,
+				message: "Email already exists",
+			});
+		}
+
+
+		return res.status(500).json({
+			success: false,
+			message: "Something went wrong",
+		});
+	}
+};
 
 module.exports = {
 	getAllUsersAPI,
@@ -131,5 +175,6 @@ module.exports = {
 	createUserAPI,
 	updateUserAPI,
 	deleteUserAPI,
-	loginUserAPI
+	loginUserAPI,
+	registerUserAPI
 }
