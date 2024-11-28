@@ -29,11 +29,11 @@ const getUserById = (userId) => {
 	})
 }
 
-const createUser = (email, name, city, password) => {
+const createUser = (email, name, city, dob, gender) => {
 	return new Promise((resolve, reject) => {
 		connection.query(
-			`INSERT INTO Users (email, name, city,password) VALUES (?, ?, ?,?)`,
-			[email, name, city, password],
+			`INSERT INTO Users (email, name, city,dob,gender) VALUES (?, ?, ?,?,?)`,
+			[email, name, city, dob, gender],
 			(err, result) => {
 				if (err) {
 					return reject(err)
@@ -44,11 +44,11 @@ const createUser = (email, name, city, password) => {
 	})
 }
 
-const updateUser = (userId, email, name, city, password) => {
+const updateUser = (userId, email, name, city, dob, gender) => {
 	return new Promise((resolve, reject) => {
 		connection.query(
-			`UPDATE Users SET email = ?, name = ?, city = ?,password=? WHERE id = ?`,
-			[email, name, city, password, userId],
+			`UPDATE Users SET email = ?, name = ?, city = ?,dob=?,gender=? WHERE id = ?`,
+			[email, name, city, dob, gender, userId],
 			(err, result) => {
 				if (err) {
 					return reject(err)
@@ -92,7 +92,7 @@ const loginUser = (email, password) => {
 		);
 	});
 };
-const registerUser = (email, name, city, password) => {
+const registerUser = (email, name, city, password, dob, gender) => {
 	return new Promise((resolve, reject) => {
 		// Check if the email already exists
 		connection.query(`SELECT * FROM Users WHERE email = ?`, [email], (err, results) => {
@@ -105,8 +105,8 @@ const registerUser = (email, name, city, password) => {
 
 			// If the email does not exist, add a new user to the database
 			connection.query(
-				`INSERT INTO Users (email, name, city, password) VALUES (?, ?, ?, ?)`,
-				[email, name, city, password],
+				`INSERT INTO Users (email, name, city, password,dob,gender) VALUES (?, ?, ?, ?,?,?)`,
+				[email, name, city, password, dob, gender],
 				(err, result) => {
 					if (err) {
 						return reject(err);
