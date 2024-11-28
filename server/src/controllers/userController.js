@@ -5,6 +5,9 @@ const {
 	updateUser,
 	deleteUser, loginUser, registerUser
 } = require("../services/userService")
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const jwtConfig = require("../config/jwtConfig");
 
 // POST /api/users/login
 const loginUserAPI = async (req, res) => {
@@ -18,13 +21,28 @@ const loginUserAPI = async (req, res) => {
 	}
 
 	try {
+		// Lấy user từ database
 		const user = await loginUser(email, password);
 
+		// So sánh mật khẩu đã mã hóa với mật khẩu nhập vào
+		const isPasswordValid = await bcrypt.compare(password, user.password);
+		if (!isPasswordValid) {
+			return res.status(401).json({
+				success: false,
+				message: "Invalid email or password",
+			});
+		}
 
+		// Tạo JWT token
+		const token = jwt.sign({ id: user.id, email: user.email }, jwtConfig.secret, {
+			expiresIn: jwtConfig.expiresIn,
+		});
+
+		// Trả về thông tin người dùng và token
 		return res.status(200).json({
 			success: true,
 			message: "Login successful",
-			data: user,
+			data: { user, token },
 		});
 	} catch (err) {
 		console.error("Error logging in: ", err);
@@ -34,6 +52,7 @@ const loginUserAPI = async (req, res) => {
 		});
 	}
 };
+
 
 // GET /api/users
 const getAllUsersAPI = async (req, res) => {
@@ -128,17 +147,18 @@ const deleteUserAPI = async (req, res) => {
 const registerUserAPI = async (req, res) => {
 	const { email, name, city, password, dob, gender } = req.body;
 
-
 	if (!email || !name || !city || !password) {
 		return res.status(400).json({
 			success: false,
-			message: "All fields (email, name, city, password,dob,gender) are required",
+			message: "All fields are required",
 		});
 	}
 
 	try {
-		const result = await registerUser(email, name, city, password, dob, gender);
+		// Hash password
+		const hashedPassword = bcrypt.hashSync(password, 10);
 
+		const result = await registerUser(email, name, city, hashedPassword, dob, gender);
 
 		return res.status(201).json({
 			success: true,
@@ -154,16 +174,12 @@ const registerUserAPI = async (req, res) => {
 		});
 	} catch (err) {
 		console.error("Error registering user: ", err);
-
-
 		if (err.message === "Email already exists") {
 			return res.status(409).json({
 				success: false,
 				message: "Email already exists",
 			});
 		}
-
-
 		return res.status(500).json({
 			success: false,
 			message: "Something went wrong",

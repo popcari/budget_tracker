@@ -1,5 +1,7 @@
 const connection = require("../config/database")
-
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const jwtConfig = require("../config/jwtConfig");
 const getAllUsers = () => {
 	return new Promise((resolve, reject) => {
 		connection.query(`SELECT * FROM Users`, (err, results) => {
@@ -78,8 +80,8 @@ const deleteUser = (userId) => {
 const loginUser = (email, password) => {
 	return new Promise((resolve, reject) => {
 		connection.query(
-			`SELECT * FROM Users WHERE email = ? AND password = ?`,
-			[email, password],
+			`SELECT * FROM Users WHERE email = ?`, // Tìm người dùng theo email
+			[email],
 			(err, results) => {
 				if (err) {
 					return reject(err);
@@ -87,11 +89,24 @@ const loginUser = (email, password) => {
 				if (results.length === 0) {
 					return reject(new Error("Invalid email or password"));
 				}
-				resolve(results[0]);
+
+				const user = results[0];
+				// So sánh mật khẩu đã mã hóa
+				bcrypt.compare(password, user.password, (err, isMatch) => {
+					if (err) {
+						return reject(err);
+					}
+					if (!isMatch) {
+						return reject(new Error("Invalid email or password"));
+					}
+
+					resolve(user); // Trả về user nếu mật khẩu đúng
+				});
 			}
 		);
 	});
 };
+
 const registerUser = (email, name, city, password, dob, gender) => {
 	return new Promise((resolve, reject) => {
 		// Check if the email already exists
