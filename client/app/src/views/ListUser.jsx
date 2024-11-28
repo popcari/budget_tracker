@@ -85,9 +85,22 @@ const App = () => {
 
             if (result.success) {
                 message.success(currentRecord ? 'User updated successfully' : 'User created successfully');
+
+                if (currentRecord) {
+                    // Update user in the local list
+                    setUsers((prevUsers) =>
+                        prevUsers.map((user) =>
+                            user.id === currentRecord.id ? { ...user, ...values } : user
+                        )
+                    );
+                } else {
+                    // Add new user to the local list
+                    const newUser = { ...values, id: result.data.id }; // Assuming the API returns the new ID
+                    setUsers((prevUsers) => [...prevUsers, newUser]);
+                }
+
                 setIsModalVisible(false);
                 setCurrentRecord(null);
-                fetchUsers();
             } else {
                 message.error(result.message || 'Failed to save user');
             }
@@ -95,6 +108,7 @@ const App = () => {
             message.error('Error saving user');
         }
     };
+
 
     // Delete user
     const deleteUser = async (id) => {

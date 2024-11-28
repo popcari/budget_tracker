@@ -61,6 +61,7 @@ const Login = () => {
                 <Form.Item
                     label="Email"
                     name="email"
+                    className="custom-label"
                     rules={[
                         { required: true, message: 'Vui lòng nhập email của bạn!' },
                         { type: 'email', message: 'Email không hợp lệ!' },
@@ -72,6 +73,7 @@ const Login = () => {
                 <Form.Item
                     label="Mật khẩu"
                     name="password"
+                    className="custom-label"
                     rules={[{ required: true, message: 'Vui lòng nhập mật khẩu của bạn!' }]}
                 >
                     <Input.Password
