@@ -5,9 +5,10 @@ const {
 	updateUser,
 	deleteUser, loginUser, registerUser
 } = require("../services/userService")
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const jwtConfig = require("../config/jwtConfig");
+require("dotenv").config()
+const jwt = require(process.env.JWT);
+const bcrypt = require(process.env.BCRYPT);
+const jwtConfig = require(process.env.JWTCONFIG);
 
 // POST /api/users/login
 const loginUserAPI = async (req, res) => {
@@ -42,7 +43,7 @@ const loginUserAPI = async (req, res) => {
 		return res.status(200).json({
 			success: true,
 			message: "Login successful",
-			data: { user, token },
+			data: { token },
 		});
 	} catch (err) {
 		console.error("Error logging in: ", err);

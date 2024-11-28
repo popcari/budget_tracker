@@ -13,7 +13,7 @@ import Dashboard from "./views/Dashboard.jsx"
 import Login from "./views/Login.jsx"
 import Register from "./views/Register.jsx"
 import ListUser from "./views/ListUser.jsx"
-
+import ProtectedRoute from "./views/ProtectedRoute.jsx";
 
 createRoot(document.getElementById("root")).render(
 	<StrictMode>
@@ -31,7 +31,11 @@ createRoot(document.getElementById("root")).render(
 					</Route>
 					<Route path="/login" element={<Login />}></Route>
 					<Route path="/register" element={<Register />}></Route>
-					<Route path="/listUser" element={<ListUser />}></Route>
+					<Route path="/listUser" element={
+						<ProtectedRoute>
+							<ListUser />
+						</ProtectedRoute>
+					} ></Route>
 				</Routes>
 			</Router>
 		</Provider>

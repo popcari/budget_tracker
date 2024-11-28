@@ -1,4 +1,6 @@
+require("dotenv").config()
+
 module.exports = {
-    secret: "hihipronodejs123@", // Thay bằng một chuỗi bí mật của bạn
-    expiresIn: "1h", // Token hết hạn sau 1 giờ
+    secret: process.env.SECRET, // Thay bằng một chuỗi bí mật của bạn
+    expiresIn: process.env.EXPIRENIN, // Token hết hạn sau 1 giờ
 };
