@@ -19,7 +19,7 @@ import {
     PlusOutlined,
     EllipsisOutlined,
 } from '@ant-design/icons';
-
+import { useNavigate } from "react-router-dom";
 const { Header, Content, Sider } = Layout;
 const { Title } = Typography;
 
@@ -29,12 +29,32 @@ const App = () => {
     const [selectedKeys, setSelectedKeys] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [currentRecord, setCurrentRecord] = useState(null);
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/login");
+    };
 
     // Fetch users from API
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8889/api/user');
+            // Lấy token từ localStorage
+            const token = localStorage.getItem("token");
+            // Nếu không tìm thấy token, báo lỗi
+            if (!token) {
+                message.error("Token không tồn tại. Vui lòng đăng nhập lại.");
+                setLoading(false);
+                return;
+            }
+            const response = await fetch("http://localhost:8889/api/user", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`, // Gửi token trong tiêu đề
+                },
+            });
             const result = await response.json();
             if (result.success) {
                 setUsers(result.data.map((user, index) => ({ ...user, key: user.id || index })));
@@ -54,7 +74,14 @@ const App = () => {
     const fetchUserById = async (id) => {
         setLoading(true);
         try {
-            const response = await fetch(`http://localhost:8889/api/user/${id}`);
+            const token = localStorage.getItem("token");
+            const response = await fetch(`http://localhost:8889/api/user/${id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`, // Gửi token trong tiêu đề
+                },
+            });
             const result = await response.json();
 
             if (result.success) {
@@ -70,6 +97,7 @@ const App = () => {
     };
     // Handle form submit
     const handleFormSubmit = async (values) => {
+        const token = localStorage.getItem("token");
         const url = currentRecord
             ? `http://localhost:8889/api/user/update/${currentRecord.id}`
             : 'http://localhost:8889/api/user/create';
@@ -78,7 +106,10 @@ const App = () => {
         try {
             const response = await fetch(url, {
                 method,
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`, // Thêm token vào tiêu đề
+                },
                 body: JSON.stringify(values),
             });
             const result = await response.json();
@@ -113,8 +144,13 @@ const App = () => {
     // Delete user
     const deleteUser = async (id) => {
         try {
+            const token = localStorage.getItem("token");
             const response = await fetch(`http://localhost:8889/api/user/delete/${id}`, {
-                method: 'DELETE',
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`, // Gửi token trong tiêu đề
+                },
             });
             const result = await response.json();
             if (result.success) {
@@ -198,6 +234,8 @@ const App = () => {
                 <Title level={4} style={{ color: 'white', padding: 16 }}>
                     User Management
                 </Title>
+                <Button type="primary"
+                    icon={<PlusOutlined />} onClick={handleLogout}>Logout</Button>
             </Sider>
             <Layout>
                 <Header style={{ background: '#fff', padding: 16 }}>

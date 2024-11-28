@@ -2,22 +2,17 @@ import React, { useState } from "react";
 import { Checkbox, Form, Input } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import "../style/Login.css";
-
+import { useNavigate } from "react-router-dom";
 const Login = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-
+    const navigate = useNavigate();
     const handleLogin = async (values) => {
         setLoading(true);
         setError("");
 
         const { email, password } = values;
 
-        if (!email || !password) {
-            setError("Email và mật khẩu không được để trống.");
-            setLoading(false);
-            return;
-        }
 
         try {
             const response = await fetch("http://localhost:8889/api/user/login", {
@@ -25,12 +20,19 @@ const Login = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
             });
-
+            if (!response.ok) {
+                // Khi status code không thuộc 2xx, xử lý lỗi
+                const errorData = await response.json();
+                setError(errorData.message || "Đã xảy ra lỗi.");
+                return;
+            }
             const data = await response.json();
+            console.log(data.data.token);
 
             if (response.ok) {
-                alert("Đăng nhập thành công!");
-                console.log(data);
+                //lưu token jwt trả về từ backend vào localstorage
+                localStorage.setItem("token", data.data.token);
+                navigate("/listUser");
             } else {
                 setError(data.message || "Đã xảy ra lỗi.");
             }
